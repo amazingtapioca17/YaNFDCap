@@ -10,7 +10,6 @@ package face
 import (
 	"sync"
 
-	"github.com/named-data/YaNFD/conn"
 	"github.com/named-data/YaNFD/core"
 	"github.com/named-data/YaNFD/dispatch"
 	"github.com/named-data/YaNFD/ndn"
@@ -22,10 +21,9 @@ var FaceTable Table
 
 // Table hold all faces used by the forwarder.
 type Table struct {
-	Faces           map[uint64]LinkService
-	mutex           sync.RWMutex
-	nextFaceID      uint64
-	ExternalManager conn.Conn
+	Faces      map[uint64]LinkService
+	mutex      sync.RWMutex
+	nextFaceID uint64
 }
 
 func init() {
@@ -104,5 +102,6 @@ func (t *Table) Remove(id uint64) {
 	// Referential:
 	// https://github.com/named-data/NFD/blob/7249fb4d5225cbe99a3901f9485a8ad99a7abceb/daemon/table/cleanup.cpp#L36-L40
 	table.Rib.CleanUpFace(id)
-	//t.ExternalManager.SendFace(id)
+
+	core.LogDebug("FaceTable", "Unregistered FaceID=", id)
 }

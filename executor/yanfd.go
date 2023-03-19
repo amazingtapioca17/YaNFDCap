@@ -8,10 +8,7 @@
 package executor
 
 import (
-	"fmt"
 	"net"
-	"net/http"
-	_ "net/http/pprof"
 	"os"
 	"runtime"
 	"runtime/pprof"
@@ -101,15 +98,16 @@ func NewYaNFD(config *YaNFDConfig) *YaNFD {
 		blockProfiler:  blockProfiler,
 	}
 }
+
+// Start runs YaNFD. Note: this function may exit the program when there is error.
+// This function is non-blocking.
 func (y *YaNFD) Start() {
 	core.LogInfo("Main", "Starting YaNFD")
 
 	// Load strategies
 	//core.LogInfo("Main", "Loading strategies")
 	//fw.LoadStrategies()
-	go func() {
-		fmt.Println(http.ListenAndServe("localhost:6060", nil))
-	}()
+
 	// Initialize FIB table
 	fibTableAlgorithm := core.GetConfigStringDefault("tables.fib.algorithm", "nametree")
 	table.CreateFIBTable(fibTableAlgorithm)
@@ -134,7 +132,6 @@ func (y *YaNFD) Start() {
 		go fw.Threads[i].Run()
 	}
 	dispatch.InitializeFWThreads(fwForDispatch)
-	//hard code in face to mgmt thread outside of mgmt thread (is dubious at best to do this)
 
 	// Perform setup operations for each network interface
 	faceCnt := 0

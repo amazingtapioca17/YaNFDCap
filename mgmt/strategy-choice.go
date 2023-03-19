@@ -216,7 +216,9 @@ func (s *StrategyChoiceModule) list(interest *ndn.Interest, pitToken []byte, inF
 	dataset := make([]byte, 0)
 	strategyChoiceList := mgmt.MakeStrategyChoiceList()
 	for _, fsEntry := range entries {
-		strategyChoiceList = append(strategyChoiceList, mgmt.MakeStrategyChoice(fsEntry.Name(), fsEntry.GetStrategy()))
+		convertName, _ := ndn.NameFromString(fsEntry.EncName().String())
+		convertStrategy, _ := ndn.NameFromString(fsEntry.GetEncStrategy().String())
+		strategyChoiceList = append(strategyChoiceList, mgmt.MakeStrategyChoice(convertName, convertStrategy))
 	}
 
 	wires, err := strategyChoiceList.Encode()

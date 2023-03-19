@@ -171,7 +171,7 @@ func (f *FibStrategyTree) InsertNextHopEnc(name *enc.Name, nexthop uint64, cost 
 	f.fibStrategyRWMutex.Lock()
 	defer f.fibStrategyRWMutex.Unlock()
 	entry := f.fillTreeToPrefixEnc(name)
-	if entry.name == nil {
+	if entry.encname == nil {
 		entry.encname = name
 	}
 	for _, existingNexthop := range entry.nexthops {

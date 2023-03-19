@@ -279,7 +279,8 @@ func (r *RIBModule) list(interest *ndn.Interest, pitToken []byte, inFace uint64)
 	entries := table.Rib.GetAllEntries()
 	dataset := make([]byte, 0)
 	for _, entry := range entries {
-		ribEntry := mgmt.MakeRibEntry(entry.Name)
+		convert, _ := ndn.NameFromString(entry.EncName.String())
+		ribEntry := mgmt.MakeRibEntry(convert)
 		for _, route := range entry.GetRoutes() {
 			var res mgmt.Route
 			res.FaceID = route.FaceID

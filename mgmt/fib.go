@@ -175,7 +175,8 @@ func (f *FIBModule) list(interest *ndn.Interest, pitToken []byte, inFace uint64)
 	entries := table.FibStrategyTable.GetAllFIBEntries()
 	dataset := make([]byte, 0)
 	for _, fsEntry := range entries {
-		fibEntry := mgmt.MakeFibEntry(fsEntry.Name())
+		convert, _ := ndn.NameFromString(fsEntry.EncName().String())
+		fibEntry := mgmt.MakeFibEntry(convert)
 		for _, nexthop := range fsEntry.GetNextHops() {
 			var record mgmt.NextHopRecord
 			record.FaceID = nexthop.Nexthop
